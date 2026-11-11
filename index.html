@@ -22,7 +22,27 @@
   </header>
   <main>
     <p id="notice" class="notice" role="status" aria-live="polite"></p>
-<section id="libraryScreen"><h1 id="libraryHeading">Your Decks</h1></section>
+    <section id="libraryScreen" aria-labelledby="libraryHeading">
+      <div class="page-title">
+        <div><p class="eyebrow">deck library</p><h1 id="libraryHeading" tabindex="-1">Your Amazing Decks</h1>
+          <p class="muted">goofy ahh cards that are better than quizlet</p></div>
+        <button id="sampleButton" class="secondary" type="button">load goat set</button>
+      </div>
+      <form id="deckForm" class="new-deck">
+        <label for="deckName">deck name</label>
+        <div class="form-row"><input id="deckName" maxlength="100" autocomplete="off" placeholder="name your deck">
+          <button type="submit">create deck</button></div>
+      </form>
+      <div class="section-label"><h2>deck list:</h2><span id="deckTotal"></span></div>
+      <p id="emptyLibrary" class="empty">there arent any decks here yet, so add one or load the goat set to try it out.</p>
+      <div id="deckList" class="deck-grid"></div>
+      <section class="backup-box" aria-labelledby="backupHeading">
+        <div><h2 id="backupHeading">backups</h2><p>download a copy of your decks if you want a backup, or bring one back without replacing the decks you already have.</p></div>
+        <div class="backup-actions"><button id="exportButton" class="secondary" type="button">export backup</button>
+          <label class="file-label" for="importFile">import backup</label><input id="importFile" type="file" accept=".json,application/json"></div>
+      </section>
+    </section>
+
   </main>
   <footer>your cards stay in this browser, so keep a backup if you want another copy.</footer>
 </body>
