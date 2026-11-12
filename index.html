@@ -43,6 +43,27 @@
       </section>
     </section>
 
+    <section id="editorScreen" aria-labelledby="editorHeading" hidden>
+      <button id="backButton" class="text-button" type="button">back to decks</button>
+      <div class="page-title"><div><p class="eyebrow">deck editor</p><h1 id="editorHeading" tabindex="-1"></h1>
+        <p id="editorCount" class="muted"></p></div>
+        <div><label class="check-label"><input id="shuffleBox" type="checkbox"> shuffle cards</label>
+          <button id="studyButton" type="button">study deck</button><p id="emptyStudyNote" class="muted small"></p></div>
+      </div>
+      <form id="renameForm" class="rename-row"><label for="renameName">deck name</label>
+        <input id="renameName" maxlength="100"><button class="secondary" type="submit">rename deck</button></form>
+      <div class="editor-layout">
+        <form id="cardForm" class="panel">
+          <h2 id="cardFormHeading">add a card</h2>
+          <label for="questionInput">question</label><textarea id="questionInput" rows="4" maxlength="5000" placeholder="what do you want to remember?"></textarea>
+          <label for="answerInput">answer</label><textarea id="answerInput" rows="4" maxlength="5000" placeholder="write the answer here"></textarea>
+          <div class="form-row"><button id="saveCardButton" type="submit">add card</button><button id="cancelEditButton" class="secondary" type="button" hidden>cancel edit</button></div>
+        </form>
+        <div><div class="search-box"><label for="cardSearch">search cards</label><input id="cardSearch" type="search" placeholder="search questions or answers"></div>
+          <p id="noCards" class="empty"></p><div id="cardList" class="card-list"></div></div>
+      </div>
+    </section>
+
   </main>
   <footer>your cards stay in this browser, so keep a backup if you want another copy.</footer>
   <script src="js/storage.js" defer></script>

@@ -47,3 +47,21 @@ textarea { resize:vertical; min-height:105px; }
 .backup-actions { display:flex; gap:10px; flex-shrink:0; align-items:center; }
 .file-label { margin:0; white-space:nowrap; }#importFile { max-width:180px; font-size:12px; }
 .rename-row { display:flex; align-items:center; gap:12px; margin:20px 0; }.rename-row label { margin:0; white-space:nowrap; }.rename-row input { max-width:340px; }
+.editor-layout { display:grid; grid-template-columns:minmax(270px,.9fr) minmax(300px,1.1fr); gap:26px; align-items:start; }
+.panel,.saved-card { background:white; border:1px solid var(--line); border-radius:7px; padding:20px; }
+.panel label { margin-top:15px; }.panel .form-row { margin-top:18px; }
+.saved-card { margin-top:14px; }.saved-card p,.question,.answer { white-space:pre-wrap; overflow-wrap:anywhere; }
+.search-box { margin-bottom:18px; }.empty { padding:20px 0; color:var(--muted); }
+.check-label { margin-bottom:12px; }input[type="checkbox"] { accent-color:var(--green); }
+.study-top { margin-top:12px; color:var(--muted); font-size:14px; }
+.study-card,.results { max-width:760px; margin:35px auto; padding:34px; background:white; border:1px solid var(--line); border-radius:8px; }
+.study-card h1 { font-size:20px; color:var(--muted); font-weight:400; }
+.question { font-size:28px; margin:26px 0; }.answer { background:#edf2e9; border-left:3px solid #8aab83; padding:18px; font-size:22px; }
+.answer-buttons,.result-actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:24px; }
+.scores { display:flex; gap:35px; border-block:1px solid var(--line); padding:18px 0; margin:25px 0; }.scores p { margin:0; color:var(--muted); }.scores strong { display:block; font-size:30px; color:var(--ink); }
+.keyboard-help { text-align:center; font-size:13px; color:var(--muted); }
+#studyDeckName { overflow-wrap:anywhere; }footer { max-width:1120px; margin:auto; padding:22px 28px; border-top:1px solid var(--line); font-size:13px; }
+@media(max-width:720px) { .topbar,main,footer { padding-left:18px; padding-right:18px; }.local-badge { margin-left:0; }.page-title,.backup-box { align-items:flex-start; flex-direction:column; }.editor-layout { grid-template-columns:1fr; }.backup-actions { flex-wrap:wrap; }.rename-row { flex-wrap:wrap; }.study-card,.results { padding:22px; }.question { font-size:24px; }.scores { gap:22px; } }
+* {
+  font-family: "Comic Sans MS", "Comic Sans", cursive !important;
+}

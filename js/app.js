@@ -87,3 +87,34 @@ function deleteDeck(id) {
 }
 
 // card stuff
+
+function resetCardForm() {
+  editingId = null;
+  el("cardForm").reset(); el("cardFormHeading").textContent = "add a card";
+  el("saveCardButton").textContent = "add card"; el("cancelEditButton").hidden = true;
+}
+
+function renderEditor() {
+  var d = currentDeck(); if (!d) return;
+  el("editorHeading").textContent = d.name;
+  el("renameName").value = d.name;
+  el("editorCount").textContent = d.cards.length + (d.cards.length === 1 ? " card ready to practice" : " cards ready to practice");
+  el("studyButton").disabled = d.cards.length === 0;
+  el("emptyStudyNote").textContent = d.cards.length ? "" : "add at least one card before starting a study round.";
+  var search = el("cardSearch").value.trim().toLowerCase();
+  var shown = d.cards.filter(function(c) { return (c.question + " " + c.answer).toLowerCase().includes(search) });
+  el("noCards").textContent = d.cards.length === 0 ? "there arent any cards in this deck yet, so add a question and answer to get started." : "nothing matched that search, so try a different word from the question or answer.";
+  el("noCards").hidden = shown.length > 0;
+  var list = el("cardList"); list.replaceChildren();
+  shown.forEach(function(card) {
+    var box = document.createElement("article"); box.className = "saved-card";
+    var q = document.createElement("h3"); q.textContent = card.question;
+    var a = document.createElement("p"); a.textContent = card.answer.length > 140 ? card.answer.slice(0,140) + "..." : card.answer;
+    var actions = document.createElement("div"); actions.className = "tile-actions";
+    var edit = document.createElement("button"); edit.type="button"; edit.className="secondary"; edit.textContent="edit";
+    edit.setAttribute("aria-label", "Edit card: " + card.question.slice(0,80)); edit.onclick = function() { editCard(card.id) };
+    var del = document.createElement("button"); del.type="button"; del.className="text-button danger"; del.textContent="delete";
+    del.setAttribute("aria-label", "Delete card: " + card.question.slice(0,80)); del.onclick = function() { deleteCard(card.id) };
+    actions.append(edit,del); box.append(q,a,actions); list.append(box);
+  });
+}
