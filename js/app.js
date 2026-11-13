@@ -155,3 +155,43 @@ function deleteCard(id) {
 }
 
 // study page
+
+function beginStudy(cards) {
+  var d=currentDeck(); if (!d) return;
+  var list=cards || d.cards;
+  if (!list.length) { say("there arent any cards to put in this round, so i need to go back and add some before trying again"); return }
+  studyRound=makeStudyRound(list,el("shuffleBox").checked);
+  say(""); showScreen("study"); drawStudy();
+}
+
+function drawStudy() {
+  var r=studyRound; if (!r) return;
+  var finished=r.position >= r.cards.length;
+  el("studyCard").hidden=finished; el("results").hidden=!finished;
+  el("studyProgress").textContent=finished ? "round finished" : (r.position+1) + " of " + r.cards.length + " cards have come up in this round so far";
+  if (finished) {
+    var score=studySummary(r);
+    el("correctTotal").textContent=score.correct;
+    el("missedTotal").textContent=score.missed;
+    el("accuracyTotal").textContent=score.accuracy + "%";
+    el("resultMessage").textContent=score.missed === 0 ? "I got through all " + r.cards.length + " cards without marking any of them wrong, so i can either have another go or go back to the deck" : "I got " + score.correct + " out of " + r.cards.length + " right this time, and there are " + score.missed + " that i can try again without going through the whole deck";
+    el("retryButton").hidden=score.missed === 0;
+    el("keyInstructions").hidden=true;
+    el("resultsHeading").focus();
+  } else {
+    var c=r.cards[r.position];
+    el("studyDeckName").textContent=currentDeck().name;
+    el("studyQuestion").textContent=c.question;
+    el("studyAnswer").textContent=c.answer; el("studyAnswer").hidden=!r.revealed;
+    el("revealButton").hidden=r.revealed; el("answerButtons").hidden=!r.revealed;
+    el("keyInstructions").hidden=false;
+    if (r.revealed) el("correctButton").focus();
+    else el("revealButton").focus();
+  }
+}
+
+function revealAnswer() { if (revealStudyCard(studyRound)) drawStudy() }
+
+function markAnswer(correct) { if (answerStudyCard(studyRound,correct)) drawStudy() }
+
+// backup buttons
