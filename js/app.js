@@ -118,3 +118,40 @@ function renderEditor() {
     actions.append(edit,del); box.append(q,a,actions); list.append(box);
   });
 }
+
+function saveCard(event) {
+  event.preventDefault();
+  var d=currentDeck(); if (!d) return;
+  var q=el("questionInput").value.trim(); var a=el("answerInput").value.trim();
+  if (!q || !a) { say("fill in both sides of the card before adding it to the deck."); return }
+  if (q.length > 5000 || a.length > 5000) { say("one of those boxes has more than 5000 characters in it so i need to make it a bit shorter before adding the card"); return }
+  if (editingId) {
+    var old=d.cards.find(function(c) { return c.id === editingId });
+    if (!old) { say("the card i was changing is not in this deck anymore so i need to start another one instead of trying to save over it"); resetCardForm(); return }
+    old.question=q; old.answer=a;
+  } else {
+    var total=decks.reduce(function(n,deck) { return n+deck.cards.length },0);
+    if (total >= 20000) { say("there are already 20000 cards across these decks so i need to remove some before i can add another one"); return }
+    d.cards.push({ id:makeId(), question:q, answer:a });
+  }
+  resetCardForm(); renderEditor(); renderLibrary(); saveEverything("your card is saved in the deck with the question and answer you entered."); el("questionInput").focus();
+}
+
+function editCard(id) {
+  var d=currentDeck(); if (!d) return;
+  var c=d.cards.find(function(item) { return item.id === id }); if (!c) return;
+  editingId=id; el("questionInput").value=c.question; el("answerInput").value=c.answer;
+  el("cardFormHeading").textContent="edit card"; el("saveCardButton").textContent="save changes";
+  el("cancelEditButton").hidden=false; el("questionInput").focus();
+}
+
+function deleteCard(id) {
+  var d=currentDeck(); if (!d) return;
+  var c=d.cards.find(function(item) { return item.id === id });
+  if (!c || !confirm('Delete the card "' + c.question.slice(0,80) + '"?')) return;
+  d.cards=d.cards.filter(function(item) { return item.id !== id });
+  if (editingId === id) resetCardForm();
+  renderEditor(); renderLibrary(); saveEverything("the card has been removed and the other cards are still in the deck.");
+}
+
+// study page
