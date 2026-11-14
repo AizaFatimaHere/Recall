@@ -5,11 +5,8 @@ var editingId = null;
 var studyRound = null;
 var currentScreen = "library";
 
-
 function el(id) { return document.getElementById(id) }
-
 function say(message) { el("notice").textContent = message }
-
 function currentDeck() { return decks.find(function(d) { return d.id === activeId }) }
 
 function showScreen(name) {
@@ -30,7 +27,6 @@ function saveEverything(message) {
 }
 
 // library
-
 function renderLibrary() {
   var list = el("deckList"); list.replaceChildren();
   el("emptyLibrary").hidden = decks.length !== 0;
@@ -59,7 +55,6 @@ function openDeck(id) {
 }
 
 // deck actions
-
 function createDeck(event) {
   event.preventDefault();
   var name = el("deckName").value.trim();
@@ -87,7 +82,6 @@ function deleteDeck(id) {
 }
 
 // card stuff
-
 function resetCardForm() {
   editingId = null;
   el("cardForm").reset(); el("cardFormHeading").textContent = "add a card";
@@ -155,7 +149,6 @@ function deleteCard(id) {
 }
 
 // study page
-
 function beginStudy(cards) {
   var d=currentDeck(); if (!d) return;
   var list=cards || d.cards;
@@ -191,11 +184,9 @@ function drawStudy() {
 }
 
 function revealAnswer() { if (revealStudyCard(studyRound)) drawStudy() }
-
 function markAnswer(correct) { if (answerStudyCard(studyRound,correct)) drawStudy() }
 
 // backup buttons
-
 function exportBackup() {
   var data=makeBackup(decks);
   var url=URL.createObjectURL(new Blob([data],{type:"application/json"}));
@@ -221,7 +212,6 @@ async function importBackup(event) {
 }
 
 // sample deck
-
 function loadSample() {
   var existing=decks.find(function(d) { return d.sampleKey === "recall-starter-v1" });
   if (existing) { openDeck(existing.id); say("the goat set is already in my list so i opened that one instead of putting another copy in here"); return }
@@ -239,7 +229,6 @@ function loadSample() {
 }
 
 // keyboard bits
-
 function studyKeys(event) {
   if (currentScreen !== "study" || event.repeat || event.altKey || event.ctrlKey || event.metaKey) return;
   var target=event.target;
