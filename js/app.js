@@ -239,3 +239,46 @@ function loadSample() {
 }
 
 // keyboard bits
+
+function studyKeys(event) {
+  if (currentScreen !== "study" || event.repeat || event.altKey || event.ctrlKey || event.metaKey) return;
+  var target=event.target;
+  if (target && (target.matches("input, textarea, select") || target.isContentEditable)) return;
+  if (!studyRound || studyRound.position >= studyRound.cards.length) return;
+  if (event.code === "Space") {
+    event.preventDefault(); if (!studyRound.revealed) revealAnswer();
+  } else if (event.key === "1" || event.key === "2") {
+    event.preventDefault(); markAnswer(event.key === "1");
+  }
+}
+
+function warnBeforeClose(event) {
+  if (currentScreen === "study" && studyRound && studyRound.position < studyRound.cards.length) {
+    event.preventDefault(); event.returnValue="";
+  }
+}
+
+// hook everything up
+var loaded=loadDecks(); decks=loaded.decks;
+el("deckForm").addEventListener("submit",createDeck);
+el("renameForm").addEventListener("submit",renameDeck);
+el("cardForm").addEventListener("submit",saveCard);
+el("cancelEditButton").onclick=resetCardForm;
+el("cardSearch").addEventListener("input",renderEditor);
+el("homeButton").onclick=function() { if (showScreen("library")) renderLibrary() };
+el("backButton").onclick=function() { if (showScreen("library")) renderLibrary() };
+el("studyButton").onclick=function() { beginStudy() };
+el("revealButton").onclick=revealAnswer;
+el("correctButton").onclick=function() { markAnswer(true) };
+el("missedButton").onclick=function() { markAnswer(false) };
+el("retryButton").onclick=function() { var missed=retryCards(studyRound); beginStudy(missed) };
+el("againButton").onclick=function() { beginStudy() };
+el("doneButton").onclick=function() { renderEditor(); showScreen("editor") };
+el("leaveStudyButton").onclick=function() { if (showScreen("editor")) renderEditor() };
+el("exportButton").onclick=exportBackup;
+el("importFile").addEventListener("change",importBackup);
+el("sampleButton").onclick=loadSample;
+document.addEventListener("keydown",studyKeys);
+window.addEventListener("beforeunload",warnBeforeClose);
+renderLibrary();
+if (loaded.notice) say(loaded.notice);
