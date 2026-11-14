@@ -195,3 +195,47 @@ function revealAnswer() { if (revealStudyCard(studyRound)) drawStudy() }
 function markAnswer(correct) { if (answerStudyCard(studyRound,correct)) drawStudy() }
 
 // backup buttons
+
+function exportBackup() {
+  var data=makeBackup(decks);
+  var url=URL.createObjectURL(new Blob([data],{type:"application/json"}));
+  var link=document.createElement("a"); link.href=url;
+  link.download="recall-backup-" + new Date().toISOString().slice(0,10) + ".json";
+  document.body.append(link); link.click(); link.remove();
+  setTimeout(function() { URL.revokeObjectURL(url) },1000);
+  say("the backup has been downloaded so I can keep a copy of it");
+}
+
+async function importBackup(event) {
+  var input=event.target; var file=input.files[0]; if (!file) return;
+  input.disabled=true;
+  try {
+    if (file.size > 5000000) throw new Error("the backup needs to be smaller than 5 MB before i can bring its decks into this page");
+    var text=await file.text();
+    var oldCount=decks.length;
+    var next=readBackup(text,decks);
+    decks=next; renderLibrary();
+    saveEverything("Added " + (decks.length-oldCount) + " deck copies. Your earlier decks are still here.");
+  } catch (err) { say("Import stopped: " + err.message + " Your existing decks were kept.") }
+  finally { input.value=""; input.disabled=false }
+}
+
+// sample deck
+
+function loadSample() {
+  var existing=decks.find(function(d) { return d.sampleKey === "recall-starter-v1" });
+  if (existing) { openDeck(existing.id); say("the goat set is already in my list so i opened that one instead of putting another copy in here"); return }
+  if (decks.length >= 300 || decks.reduce(function(n,d) { return n+d.cards.length },0) > 19997) {
+    say("there isnt enough room for another copy of the goat set so i need to make a backup and remove some old cards before adding it"); return;
+  }
+  var examples=[
+    ["Am I the goat?","Yes"],
+    ["Is pixl the goat?","maybe, probably lol"],
+    ["is capcut the goat","nah, premier pro would mog"]
+  ];
+  var deck={id:makeId(),name:"goat set",cards:[],createdAt:new Date().toISOString(),sampleKey:"recall-starter-v1"};
+  examples.forEach(function(pair) { deck.cards.push({id:makeId(),question:pair[0],answer:pair[1]}) });
+  decks.push(deck); renderLibrary(); saveEverything("Sample added. Open it whenever you want a quick round.");
+}
+
+// keyboard bits
